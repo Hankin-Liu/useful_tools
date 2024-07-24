@@ -1,13 +1,13 @@
 #!/bin/bash
 
 if [[ $# < 4 ]];then
-    echo "Usage: ./run_on_machine [ip or ip:port] [user] [password] [command]"
+    echo "Usage: ./run_on_remote [ip or ip:port] [user] [password] [command]"
     exit -1
 fi
 
 which sshpass > /dev/null
 if [[ $? -ne 0 ]];then
-    echo "run_on_machine depends on sshpass and which, please install it."
+    echo "run_on_remote depends on sshpass and which, please install it."
     exit -1
 fi
 
