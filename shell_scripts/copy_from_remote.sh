@@ -7,7 +7,7 @@ fi
 
 which sshpass > /dev/null
 if [[ $? -ne 0 ]];then
-    echo "copy_from_remote depends on sshpass and which, please install it."
+    echo "copy_from_remote.sh depends on sshpass and which, please install it."
     exit -1
 fi
 
