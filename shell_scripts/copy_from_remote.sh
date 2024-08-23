@@ -1,4 +1,19 @@
 #!/bin/bash
+#################################################################################################################
+# copy_from_remote.sh  copy files from remote server.
+#
+# Dependencies: sshpass,scp
+# Platform: linux
+#
+# USAGE: sh copy_from_remote.sh [-h] [-s] [-H remote_ip] [-P port] [-u user_name]
+#                               [-p password] [-r remote_file_path] [-l local_file_path]
+# Run "sh copy_from_remote.sh -h" for detail.
+#
+# Copyright (c) 2024 Liu Hua Jun.
+# Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE(the "License")
+#
+# 22-Jul-2024   Hankin       Created this.
+#################################################################################################################
 
 function print_usage()
 {
@@ -27,6 +42,15 @@ function check_is_empty
     fi
 }
 
+function check_dependency
+{
+    which $1 > /dev/null
+    if [[ $? -ne 0 ]];then
+        echo "copy_from_remote.sh depends on $1, please install it."
+        exit -1
+    fi
+}
+
 is_silience=0
 function say
 {
@@ -36,11 +60,8 @@ function say
     echo "$1"
 }
 
-which sshpass > /dev/null
-if [[ $? -ne 0 ]];then
-    echo "copy_from_remote.sh depends on sshpass and which, please install it."
-    exit -1
-fi
+check_dependency sshpass
+check_dependency scp
 
 ip=""
 port=22
