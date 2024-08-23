@@ -25,13 +25,12 @@ function check_is_empty
         print_usage
         exit -1
     fi
-    echo "aaa $1"
 }
 
 is_silience=0
 function say
 {
-    if [[ $is_silience -eq 0 ]];then
+    if [[ $is_silience -eq 1 ]];then
         return
     fi
     echo "$1"
@@ -49,7 +48,7 @@ user=""
 password=""
 remote_file_path=""
 local_file_path=""
-while getopts "H:p:u:P:r:l:h" opt; do
+while getopts "H:p:u:P:r:l:hs" opt; do
     case "$opt" in
         "H")
             ip=$OPTARG
