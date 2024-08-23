@@ -105,5 +105,5 @@ if [[ $? -ne 0 ]];then
     echo "[FAILED] $(date '+%Y%m%d %H%M%S') sshpass -p $password scp -r -P $port -o StrictHostKeyChecking=no ${user}@${ip}:${remote_file_path} ${local_file_path}"
     exit -1
 else
-    say "[FINISHED] $(date '+%Y%m%d %H%M%S') sshpass -p $password scp -o StrictHostKeyChecking=no ${user}@${ip}:${remote_file_path} ${local_file_path}"
+    say "[FINISHED] $(date '+%Y%m%d %H%M%S') sshpass -p $password scp -r -P $port -o StrictHostKeyChecking=no ${user}@${ip}:${remote_file_path} ${local_file_path}"
 fi
