@@ -1,3 +1,9 @@
+/**********************************************************************************************
+ * @file aligned_alloc.h
+ * @brief alloc aligned memory
+ * @author Hankin Liu
+ * @license All right reserved.
+************************************************************************************************/
 #pragma once
 #include <cstdlib>
 #include <memory>
