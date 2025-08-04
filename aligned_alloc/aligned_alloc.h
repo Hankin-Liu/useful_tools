@@ -2,15 +2,14 @@
  * @file aligned_alloc.h
  * @brief alloc aligned memory
  * @author Hankin Liu
- * @license All right reserved.
+ * @license All rights reserved.
 ************************************************************************************************/
 #pragma once
 #include <cstdlib>
 #include <memory>
-#include <new>
 #include <stdexcept>
 #include <type_traits>
-#elif defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32) || defined(_WIN64)
 #include <malloc.h>
 #endif
 
@@ -42,6 +41,9 @@ namespace detail {
     }
 
     inline void deallocate_aligned_memory(void* ptr) {
+        if (! ptr) {
+            return;
+        }
 #if __cplusplus >= 201703L
         std::free(ptr);
 #elif defined(_WIN32) || defined(_WIN64)
@@ -51,7 +53,7 @@ namespace detail {
 #endif
     }
 
-    template<typename T, bool Trivial = std::has_trivial_destructor<T>::value>
+    template<typename T, bool Trivial = std::is_trivially_destructible<T>::value>
     struct AlignedDeleterImpl {
         static void destruct(T* ptr) {
             if (ptr) {
@@ -91,7 +93,7 @@ template <typename T, typename... Args>
 std::unique_ptr<T, detail::AlignedDeleter<T>> make_unique_aligned(std::size_t alignment, Args&&... args)
 {
     static_assert(std::is_destructible<T>::value, "T must be destructible");
-    void* ptr = allocate_aligned_memory(sizeof(T), alignment);
+    void* ptr = detail::allocate_aligned_memory(sizeof(T), alignment);
     if (!ptr) {
         throw std::bad_alloc();
     }
@@ -99,9 +101,15 @@ std::unique_ptr<T, detail::AlignedDeleter<T>> make_unique_aligned(std::size_t al
         T* obj = new (ptr) T(std::forward<Args>(args)...);
         return std::unique_ptr<T, detail::AlignedDeleter<T>>(obj);
     } catch (...) {
-        deallocate_aligned_memory(ptr);
+        detail::deallocate_aligned_memory(ptr);
         throw;
     }
+}
+
+template <typename T, typename... Args>
+inline std::unique_ptr<T, detail::AlignedDeleter<T>> make_unique_auto_aligned(Args&&... args)
+{
+    return make_unique_aligned<T>(alignof(T), std::forward<Args>(args)...);
 }
 
 template <typename T, typename... Args>
@@ -126,6 +134,12 @@ std::shared_ptr<T> make_shared_aligned(std::size_t alignment, Args&&... args)
             detail::deallocate_aligned_memory(ptr);
         }
     });
+}
+
+template <typename T, typename... Args>
+inline std::shared_ptr<T> make_shared_auto_aligned(Args&&... args)
+{
+    return make_shared_aligned<T>(alignof(T), std::forward<Args>(args)...);
 }
 
 inline std::unique_ptr<void, detail::RawDeleter> alloc_unique_buffer(std::size_t alignment, std::size_t size)
