@@ -1,0 +1,17 @@
+---
+#################################################################################################################
+# start_monitor.yml  start monitor command on all remote machines.
+#
+# Platform: linux
+#
+# Copyright (c) 2025 Liu Hua Jun.
+# Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE(the "License")
+#
+# 15-Dec-2025   Liu Hua Jun       Created this.
+#################################################################################################################
+
+- hosts: dest_machines
+  serial: 10
+  gather_facts: no
+  roles:
+    - start_monitor

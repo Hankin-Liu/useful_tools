@@ -1,0 +1,20 @@
+#################################################################################################################
+# stop_monitor.yml  stop monitor on all remote machines.
+#
+# Copyright (c) 2025 Liu Hua Jun.
+# Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE(the "License")
+#
+# 15-Dec-2025   Liu Hua Jun       Created this.
+#################################################################################################################
+
+- name: kill sar
+  shell: pkill -9 sar; exit 0
+  ignore_errors: yes
+
+- name: kill top
+  shell: pkill -9 top; exit 0
+  ignore_errors: yes
+
+- name: kill pidstat
+  shell: pkill -9 pidstat; exit 0
+  ignore_errors: yes

@@ -1,0 +1,15 @@
+---
+#################################################################################################################
+# stop_monitor.yml  stop monitor on all remote machines.
+#
+# Copyright (c) 2025 Liu Hua Jun.
+# Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE(the "License")
+#
+# 15-Dec-2025   Liu Hua Jun       Created this.
+#################################################################################################################
+
+- hosts: dest_machines
+  serial: 10
+  gather_facts: no
+  roles:
+    - stop_monitor

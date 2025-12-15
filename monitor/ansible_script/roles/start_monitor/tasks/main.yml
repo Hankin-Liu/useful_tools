@@ -1,0 +1,26 @@
+#################################################################################################################
+# start_monitor.yml  start monitor command on all remote machines.
+#
+# Platform: linux
+#
+# Copyright (c) 2025 Liu Hua Jun.
+# Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE(the "License")
+#
+# 15-Dec-2025   Liu Hua Jun       Created this.
+#################################################################################################################
+
+- name: clean monitor folder
+  shell: rm -rf {{monitor_log_folder}}; mkdir -p {{monitor_log_folder}}/monitor;
+  ignore_errors: yes
+
+- name: run sar
+  shell: info=`ps -ef | grep 'sar -A -o' | grep -v grep`; if [ -z "${info}" ];then setsid sar -A -o {{monitor_log_folder}}/monitor/sar-{{alias}}.log 1 360000 > /dev/null & fi
+  ignore_errors: yes
+
+- name: run top
+  shell: info=`ps -ef | grep 'top -b' | grep -v grep`; if [ -z "${info}" ];then setsid top -b > {{monitor_log_folder}}/monitor/top-{{alias}}.log & fi
+  ignore_errors: yes
+
+- name: run pidstat
+  shell: info=`ps -ef | grep 'pidstat -u -r -d' | grep -v grep`; username={{ansible_ssh_user}}; if [ -z "${info}" ];then setsid pidstat -u -r -d -t 1 -U ${username} > {{monitor_log_folder}}/monitor/pidstat-{{alias}}.log & fi 
+  ignore_errors: yes

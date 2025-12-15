@@ -1,0 +1,46 @@
+---
+#################################################################################################################
+# fetch_log.yml  fetch monitor logs on all remote machines.
+#
+# Platform: linux
+#
+# Copyright (c) 2025 Liu Hua Jun.
+# Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE(the "License")
+#
+# 15-Dec-2025   Liu Hua Jun       Created this.
+#################################################################################################################
+
+- hosts: dest_machines
+  serial: 10
+  gather_facts: no
+  tasks:
+    - name: backup and compress log
+      shell: rm -rf {{monitor_log_folder}}/monitor_log; cd {{monitor_log_folder}} && mkdir monitor_log && cp monitor/* monitor_log && tar zcvf monitor-{{ansible_ssh_host}}-{{alias}}.tgz monitor_log
+
+- name: create backup folder
+  hosts: control
+  gather_facts: no
+  tasks:
+    - name: generate time
+      shell: date '+%Y%m%d_%H%M%S'
+      register: cur_time
+    - name: save cur_time as a fact
+      set_fact:
+        current_time: "{{ cur_time.stdout  }}"
+
+- name: create local backup folder
+  hosts: control
+  gather_facts: no
+  tasks:
+    - name: create folder
+      shell: mkdir -p {{local_backup_folder}}/{{cur_time.stdout}}/monitor
+
+- name: fetch logs to local
+  hosts: dest_machines
+  gather_facts: no
+  tasks:
+    - name: fetch logs
+      fetch:
+        src: "{{monitor_log_folder}}/monitor-{{ansible_ssh_host}}-{{alias}}.tgz"
+        dest: "{{ hostvars['localhost']['local_backup_folder'] }}/{{ hostvars['localhost']['current_time'] }}/monitor/"
+        flat: yes

@@ -1,0 +1,31 @@
+#################################################################################################################
+# hosts configure file for remote machines.
+#
+# Platform: linux
+#
+# Copyright (c) 2025 Liu Hua Jun.
+# Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE(the "License")
+#
+# 15-Dec-2025   Liu Hua Jun       Created this.
+#################################################################################################################
+
+# write your machines here, for example: machine-1 ansible_ssh_host=127.0.0.1
+# which means name = machine_1, ip = 127.0.0.1
+[control]
+localhost ansible_connection=local
+
+[dest_machines]
+machine-1 ansible_ssh_host=127.0.0.1 alias=machine-1
+
+[dest_machines:vars]
+ansible_connection=ssh
+ansible_ssh_port=22
+# user must has write permission to monitor_log_folder
+ansible_ssh_user=root
+#ansible_ssh_pass=123456
+ansible_ssh_pass=ywzq@2011520153
+monitor_log_folder="/home/{{ansible_ssh_user}}/tmp_monitor_log_dir"
+
+[control:vars]
+# user who running this script must has write permission to local_backup_folder
+local_backup_folder=/home/performance_test/arm_kylin/v1.0/case_1
