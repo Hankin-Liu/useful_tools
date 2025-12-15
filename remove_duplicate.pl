@@ -1,3 +1,4 @@
+#!/usr/bin/env perl
 #################################################################################################################
 # remove_duplicate.pl  remove duplicate info of file.
 #
@@ -11,7 +12,6 @@
 #
 # 9-Mar-2025   Liu Hua Jun       Created this.
 #################################################################################################################
-#!/usr/bin/env perl
 use strict;
 use warnings;
 use Getopt::Long;
